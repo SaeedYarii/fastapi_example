@@ -1,0 +1,47 @@
+name: FastAPI Security CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  security-and-test:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.8"
+
+      - name: Install dependencies
+        run: |
+          python --version
+          python -m pip --version
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt -v
+
+      - name: Run Secret Scanning
+        run: python security/Secret_Scanning.py
+
+      - name: Run SCA
+        run: python security/SCA_Analysis.py
+
+      - name: Run SAST
+        run: python security/SAST_Analysis.py
+
+      - name: Run Tests
+        run: pytest
+
+      - name: Upload Security Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: |
+            secret_scanning_report.json
+            sca_report.json
+            sast_report.json
