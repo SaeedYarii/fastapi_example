@@ -49,7 +49,7 @@ def seed_db(ctx):
         == "y"
     ):
         print("Dropping tables...")
-        Base.metadata.drop_all()
-        Base.metadata.create_all()
+        Base.metadata.drop_all(bind=engine)
+        Base.metadata.create_all(bind=engine)
         seed_things()
         print("DB successfully seeded.")

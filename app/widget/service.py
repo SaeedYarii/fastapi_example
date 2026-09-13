@@ -11,7 +11,7 @@ class WidgetService:
     @staticmethod
     async def get_all(session: Session) -> List[WidgetSchema]:
         resp = session.query(Widget).all()
-        return [WidgetSchema(**i.__dict__) for i in resp]
+        return [WidgetSchema(widget_id=i.widget_id, name=i.name, purpose=i.purpose) for i in resp]
 
     @staticmethod
     async def get_by_id(widget_id: int, session: Session) -> WidgetSchema:

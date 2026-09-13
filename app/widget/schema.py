@@ -6,6 +6,6 @@ from app.base import CamelModel
 class WidgetSchema(CamelModel):
     """Widget schema"""
 
-    widget_id: Optional[int]
+    widget_id: Optional[int] = None
     name: str
     purpose: str

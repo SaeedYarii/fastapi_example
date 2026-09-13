@@ -19,10 +19,25 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python --version
-          python -m pip --version
           python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt -v
+          python -m pip install -r requirements.txt
+          python -m pip install requests pytest
+
+      - name: Run OPA
+        run: |
+          docker run -d \
+            --name opa \
+            -p 8181:8181 \
+            -v "$GITHUB_WORKSPACE/opa/policies:/policies" \
+            openpolicyagent/opa:latest \
+            run --server /policies
+
+      - name: Test OPA Policies
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE/opa/policies:/policies" \
+            openpolicyagent/opa:latest \
+            test /policies
 
       - name: Run Secret Scanning
         run: python security/Secret_Scanning.py

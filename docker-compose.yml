@@ -1,0 +1,12 @@
+services:
+  opa:
+    image: openpolicyagent/opa:latest
+    command:
+      - "run"
+      - "--server"
+      - "--addr=0.0.0.0:8181"
+      - "/policies"
+    volumes:
+      - ./opa/policies:/policies
+    ports:
+      - "8181:8181"
